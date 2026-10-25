@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090914">
+  <title>SketchRush — Draw. Guess. Win.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
+  <main class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="/"><span class="brand-mark">✳</span><span>SKETCH<span class="brand-accent">RUSH</span></span></a>
+      <div class="topbar-right"><span class="live-dot"></span><span id="connection-label">CONNECTING</span><span class="version-tag">BETA / 01</span></div>
+    </header>
+
+    <section id="lobby-screen" class="lobby-screen">
+      <div class="hero-copy"><div class="eyebrow"><span class="eyebrow-line"></span> THE REAL-TIME DRAWING BATTLE</div>
+        <h1>DRAW FAST.<br><span>GUESS FASTER.</span></h1>
+        <p class="hero-description">One secret word. One canvas. Zero artistic talent required.<br>Grab a friend and see what happens.</p>
+        <div class="feature-pills"><span>✦ LIVE MULTIPLAYER</span><span>◉ NO LOGIN</span><span>↗ 2–8 PLAYERS</span></div>
+      </div>
+      <div class="lobby-card panel">
+        <div class="card-topline"><span class="eyebrow">READY PLAYER ONE?</span><span class="card-index">01 / JOIN</span></div>
+        <label for="nickname">YOUR CALLSIGN</label>
+        <input id="nickname" maxlength="18" placeholder="e.g. PixelWizard" autocomplete="nickname">
+        <button id="create-room" class="btn btn-primary"><span>＋</span> CREATE A ROOM <span class="button-arrow">↗</span></button>
+        <div class="or-divider"><span></span> OR JOIN A FRIEND <span></span></div>
+        <label for="room-code">ROOM CODE</label>
+        <div class="join-row"><input id="room-code" maxlength="6" placeholder="ABC123" autocomplete="off" autocapitalize="characters"><button id="join-room" class="btn btn-secondary">JOIN <span>→</span></button></div>
+        <p id="lobby-error" class="error-message" role="alert"></p>
+        <p class="lobby-footnote"><span>⌁</span> Share your room code. Friends join instantly.</p>
+      </div>
+      <div class="hero-orbit orbit-a"></div><div class="hero-orbit orbit-b"></div>
+    </section>
+
+    <section id="game-screen" class="game-screen hidden">
+      <div class="game-heading">
+        <div><div class="eyebrow"><span class="live-dot"></span> LIVE GAME SESSION</div><h2 id="game-room-title">ROOM <span id="room-code-display">------</span></h2></div>
+        <div class="room-share"><div><span class="micro-label">INVITE YOUR CREW</span><strong id="share-code">------</strong></div><button id="copy-link" class="icon-button" title="Copy invite link" aria-label="Copy invite link">⧉</button></div>
+      </div>
+
+      <div class="game-layout">
+        <div class="main-column">
+          <div class="round-bar panel">
+            <div class="round-count"><span class="micro-label">ROUND</span><strong><span id="round-number">0</span><i>/</i><span id="round-total">5</span></strong></div>
+            <div class="word-zone"><span class="micro-label" id="word-label">WORD TO GUESS</span><strong id="word-display">WAITING FOR PLAYERS</strong><span id="game-status-text">Need at least 2 players to start</span></div>
+            <div class="timer-zone"><div class="timer-ring"><svg viewBox="0 0 64 64" aria-hidden="true"><circle class="timer-track" cx="32" cy="32" r="27"></circle><circle id="timer-progress" class="timer-progress" cx="32" cy="32" r="27"></circle></svg><strong id="timer-value">60</strong></div><span class="micro-label">SECONDS</span></div>
+          </div>
+
+          <div class="canvas-panel panel">
+            <div class="canvas-toolbar"><div class="canvas-label"><span class="canvas-live-dot"></span><span id="canvas-status">CANVAS STANDBY</span></div><div id="drawing-tools" class="drawing-tools"><div class="color-swatches" aria-label="Brush color"><button class="swatch active" data-color="#a855f7" style="--swatch:#a855f7" aria-label="Purple"></button><button class="swatch" data-color="#22d3ee" style="--swatch:#22d3ee" aria-label="Cyan"></button><button class="swatch" data-color="#f472b6" style="--swatch:#f472b6" aria-label="Pink"></button><button class="swatch" data-color="#facc15" style="--swatch:#facc15" aria-label="Yellow"></button><button class="swatch" data-color="#f8fafc" style="--swatch:#f8fafc" aria-label="White"></button></div><span class="toolbar-divider"></span><button id="eraser-tool" class="tool-button" title="Eraser">⌫</button><button id="clear-canvas" class="tool-button" title="Clear canvas">↺</button></div></div>
+            <div id="canvas-wrap" class="canvas-wrap"><canvas id="drawing-canvas" aria-label="Shared drawing canvas"></canvas><div id="canvas-overlay" class="canvas-overlay"><div class="overlay-icon">✳</div><strong>YOUR CANVAS AWAITS</strong><span>Create a room and invite a friend to begin.</span></div></div>
+            <div class="canvas-footer"><span>✦ DRAWING IS SYNCED LIVE</span><span id="brush-label">BRUSH / 4 PX</span></div>
+          </div>
+          <div id="drawer-banner" class="drawer-banner hidden"><span class="banner-icon">✎</span><span id="drawer-banner-text">You're drawing! Make it count.</span></div>
+        </div>
+
+        <aside class="side-column">
+          <section class="players-panel panel"><div class="panel-heading"><div><span class="eyebrow">THE LINEUP</span><h3>PLAYERS <span id="player-count">0</span></h3></div><span class="heading-icon">♙</span></div><div id="player-list" class="player-list"><div class="empty-players">Waiting for the crew...</div></div><div class="score-legend"><span>PLAYER</span><span>PTS</span></div></section>
+          <section class="chat-panel panel"><div class="panel-heading chat-heading"><div><span class="eyebrow">TALK YOUR TALK</span><h3>GUESS CHAT <span class="chat-live">LIVE</span></h3></div><span class="heading-icon">⌁</span></div><div id="chat-messages" class="chat-messages" aria-live="polite"><div class="chat-welcome"><span>✦</span><p>Welcome to the room!<br><small>Guesses and banter go here.</small></p></div></div><form id="chat-form" class="chat-form"><input id="chat-input" maxlength="180" placeholder="Type your guess..." autocomplete="off" disabled><button id="send-chat" type="submit" disabled aria-label="Send message">↗</button></form><div class="chat-hint">ENTER TO SEND <span>·</span> BE NICE, DRAW WEIRD</div></section>
+          <button id="rematch-button" class="btn btn-primary rematch-button hidden">↻ PLAY AGAIN</button>
+        </aside>
+      </div>
+      <footer class="game-footer"><span>SKETCHRUSH / MULTIPLAYER ARCADE</span><span>DRAW LIKE NOBODY'S WATCHING.</span><button id="leave-room" class="leave-button">LEAVE ROOM ↗</button></footer>
+    </section>
+    <footer id="lobby-footer" class="site-footer"><span>SKETCHRUSH © 2026</span><span>BUILT FOR FRIENDLY COMPETITION <b>✦</b></span></footer>
+  </main>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/client.js"></script>
+</body>
+</html>
